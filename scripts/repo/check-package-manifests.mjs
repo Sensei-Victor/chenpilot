@@ -126,6 +126,7 @@ export function packArtifact(root, dir) {
         encoding: "utf8",
         stdio: ["ignore", "pipe", "pipe"],
         shell: process.platform === "win32",
+        env: { ...process.env, npm_config_ignore_scripts: "true" },
       }
     );
     const [result] = JSON.parse(output);
