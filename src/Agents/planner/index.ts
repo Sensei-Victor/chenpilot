@@ -17,8 +17,15 @@ export {
   DurableRecoveryService,
   durableRecoveryService,
 } from "./DurableRecoveryService";
-export { CompensationService, compensationService, buildCompensationPlan } from "./CompensationService";
-export { ProgressMonitorService, progressMonitorService } from "./ProgressMonitor.service";
+export {
+  CompensationService,
+  compensationService,
+  buildCompensationPlan,
+} from "./CompensationService";
+export {
+  ProgressMonitorService,
+  progressMonitorService,
+} from "./ProgressMonitor.service";
 export { ExecutionStatus } from "./DurableExecution.entity";
 export { StepStatus } from "./DurableStep.entity";
 export {

@@ -32,8 +32,12 @@ describe("AgentPlanner - Bounded Recovery for Invalid Planner Responses (#1224)"
     planner = new AgentPlanner();
     jest.resetAllMocks();
     (toolRegistry.getToolMetadata as jest.Mock).mockReturnValue(validTools);
-    (planHashService.generatePlanHash as jest.Mock).mockReturnValue("mock-hash-123");
-    auditSpy = jest.spyOn(securityAuditor, "logSecurityEvent").mockImplementation();
+    (planHashService.generatePlanHash as jest.Mock).mockReturnValue(
+      "mock-hash-123"
+    );
+    auditSpy = jest
+      .spyOn(securityAuditor, "logSecurityEvent")
+      .mockImplementation();
   });
 
   afterEach(() => {
@@ -53,7 +57,12 @@ describe("AgentPlanner - Bounded Recovery for Invalid Planner Responses (#1224)"
       (agentLLM.callLLM as jest.Mock)
         .mockResolvedValueOnce({ invalid: "not a workflow" })
         .mockResolvedValueOnce({
-          workflow: [{ action: "swap", payload: { from: "USDC", to: "XLM", amount: 100 } }],
+          workflow: [
+            {
+              action: "swap",
+              payload: { from: "USDC", to: "XLM", amount: 100 },
+            },
+          ],
         });
 
       const plan = await planner.createPlan(context);
@@ -76,7 +85,9 @@ describe("AgentPlanner - Bounded Recovery for Invalid Planner Responses (#1224)"
           workflow: [{ action: "", payload: {} }], // invalid empty action string
         })
         .mockResolvedValueOnce({
-          workflow: [{ action: "transfer", payload: { asset: "XLM", amount: 50 } }],
+          workflow: [
+            { action: "transfer", payload: { asset: "XLM", amount: 50 } },
+          ],
         });
 
       const plan = await planner.createPlan(context);
@@ -190,7 +201,9 @@ describe("AgentPlanner - Bounded Recovery for Invalid Planner Responses (#1224)"
       expect(recoveryError.maxRetries).toBe(2);
       expect(recoveryError.attempts).toBe(3); // Initial attempt + 2 retries = 3
       expect(recoveryError.lastError).toContain("missing workflow array");
-      expect(recoveryError.message).toContain("recovery retries exhausted after 2 retries (3 total attempts)");
+      expect(recoveryError.message).toContain(
+        "recovery retries exhausted after 2 retries (3 total attempts)"
+      );
 
       // Verify safe terminal plan attached to error
       expect(recoveryError.safeTerminalPlan).toBeDefined();
@@ -230,7 +243,9 @@ describe("AgentPlanner - Bounded Recovery for Invalid Planner Responses (#1224)"
       expect(plan.riskLevel).toBe("low");
       expect(plan.requiresApproval).toBe(false);
       expect(plan.terminalReason).toContain("missing workflow array");
-      expect(plan.summary).toContain("Deterministic safe terminal plan: recovery exhausted after 2 attempts");
+      expect(plan.summary).toContain(
+        "Deterministic safe terminal plan: recovery exhausted after 2 attempts"
+      );
     });
   });
 
@@ -249,7 +264,9 @@ describe("AgentPlanner - Bounded Recovery for Invalid Planner Responses (#1224)"
 
       (agentLLM.callLLM as jest.Mock).mockResolvedValue({ invalid: true });
 
-      await expect(planner.createPlan(context)).rejects.toThrow(PlannerRecoveryError);
+      await expect(planner.createPlan(context)).rejects.toThrow(
+        PlannerRecoveryError
+      );
       expect(agentLLM.callLLM).toHaveBeenCalledTimes(1);
     });
 
@@ -289,7 +306,9 @@ describe("AgentPlanner - Bounded Recovery for Invalid Planner Responses (#1224)"
 
       (agentLLM.callLLM as jest.Mock).mockResolvedValue({ invalid: true });
 
-      await expect(planner.createPlan(context)).rejects.toThrow(PlannerRecoveryError);
+      await expect(planner.createPlan(context)).rejects.toThrow(
+        PlannerRecoveryError
+      );
       expect(agentLLM.callLLM).toHaveBeenCalledTimes(1);
     });
 
@@ -304,7 +323,9 @@ describe("AgentPlanner - Bounded Recovery for Invalid Planner Responses (#1224)"
 
       (agentLLM.callLLM as jest.Mock).mockResolvedValue({ invalid: true });
 
-      await expect(planner.createPlan(context)).rejects.toThrow(PlannerRecoveryError);
+      await expect(planner.createPlan(context)).rejects.toThrow(
+        PlannerRecoveryError
+      );
       expect(agentLLM.callLLM).toHaveBeenCalledTimes(2); // 1 initial + 1 retry
     });
 
@@ -338,7 +359,11 @@ describe("AgentPlanner - Bounded Recovery for Invalid Planner Responses (#1224)"
         userInput: "test input",
       };
 
-      const terminalPlan = planner.createSafeTerminalPlan(context, "Test failure reason", 3);
+      const terminalPlan = planner.createSafeTerminalPlan(
+        context,
+        "Test failure reason",
+        3
+      );
 
       expect(terminalPlan).toBeDefined();
       expect(terminalPlan.isTerminal).toBe(true);

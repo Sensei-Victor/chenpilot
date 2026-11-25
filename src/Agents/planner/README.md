@@ -359,6 +359,7 @@ de-duplicated ids a plan references — the set the resolver is called with.
 When the underlying model returns an invalid, malformed, or unauthorized workflow response during plan creation, `AgentPlanner` provides bounded recovery via a finite retry policy and a deterministic safe terminal fallback:
 
 ### Supported Behavior
+
 - **Automatic Retries**: If the model response is missing the `workflow` array, contains malformed steps (e.g., missing or invalid `action`), fails pre-execution authorization (unauthorized tool selected), or fails plan validation, the planner retries with targeted recovery instructions.
 - **Finite Retry Bounds**: Configured via `PlannerRecoveryPolicy.maxRetries` (or `PlannerConstraints.maxRetries`). Defaults to `2` retries (3 total attempts). Values are clamped between `0` and `5` (`MAX_RECOVERY_RETRIES_LIMIT`) to prevent infinite retry loops.
 - **Optional Backoff Delay**: Configured via `retryDelayMs`.

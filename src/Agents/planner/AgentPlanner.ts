@@ -207,8 +207,12 @@ export class AgentPlanner {
         });
       }
 
-// Check for contradictory financial constraints
-      if (context.constraints && context.constraints.minSlippage !== undefined && context.constraints.maxSlippage !== undefined) {
+      // Check for contradictory financial constraints
+      if (
+        context.constraints &&
+        context.constraints.minSlippage !== undefined &&
+        context.constraints.maxSlippage !== undefined
+      ) {
         if (context.constraints.minSlippage > context.constraints.maxSlippage) {
           throw new Error(
             `Contradictory financial constraints detected: minSlippage (${context.constraints.minSlippage}) cannot be greater than maxSlippage (${context.constraints.maxSlippage}).`
@@ -267,7 +271,7 @@ export class AgentPlanner {
           const workflowPlan = await this.analyzeWithLLM(
             context,
             toolAuthority,
-            attempt > 0 ? lastError ?? undefined : undefined
+            attempt > 0 ? (lastError ?? undefined) : undefined
           );
 
           // Post-model authorization gate: verify all steps against computed tool authority
@@ -284,14 +288,19 @@ export class AgentPlanner {
               rawPayload: JSON.stringify(workflowPlan),
               threatCategory: "UNAUTHORIZED_TOOL_SELECTION",
               userId: context.userId,
-              action: authResult.unauthorizedSteps.map((s) => s.action).join(", "),
+              action: authResult.unauthorizedSteps
+                .map((s) => s.action)
+                .join(", "),
             });
             throw new Error(
               `Plan authorization failed: ${authResult.errors.join(", ")}`
             );
           }
 
-          const executionPlan = this.convertToExecutionPlan(workflowPlan, context);
+          const executionPlan = this.convertToExecutionPlan(
+            workflowPlan,
+            context
+          );
           const validation = this.validatePlan(executionPlan, context);
 
           if (!validation.valid) {
@@ -442,7 +451,8 @@ export class AgentPlanner {
       throw new Error("Invalid LLM response: missing workflow array");
     }
 
-    const workflow = (response as Record<string, unknown>).workflow as unknown[];
+    const workflow = (response as Record<string, unknown>)
+      .workflow as unknown[];
     for (let i = 0; i < workflow.length; i++) {
       const step = workflow[i];
       if (!step || typeof step !== "object") {
