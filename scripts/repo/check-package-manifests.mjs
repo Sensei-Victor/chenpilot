@@ -120,7 +120,7 @@ export function packArtifact(root, dir) {
     const npmBin = process.platform === "win32" ? "npm.cmd" : "npm";
     const output = execFileSync(
       npmBin,
-      ["pack", "--json", "--ignore-scripts", "--pack-destination", dest],
+      ["--ignore-scripts", "pack", "--json", "--pack-destination", dest],
       {
         cwd: path.join(root, dir),
         encoding: "utf8",
