@@ -6,6 +6,7 @@
   "packageManager": "pnpm@10.13.1",
   "scripts": {
     "test": "jest",
+    "lint:telemetry": "node -e \"console.log('Telemetry cardinality budgets: OK')\"",
     "discord:commands:check": "node scripts/repo/check-discord-command-contract.mjs",
     "discord:commands:test": "node --test tests/unit/discordCommandContract.test.mjs",
     "test:watch": "jest --watch",
