@@ -4,7 +4,11 @@
  * Provides intelligent planning and execution for multi-step DeFi operations
  */
 
-export { AgentPlanner, agentPlanner } from "./AgentPlanner";
+export {
+  AgentPlanner,
+  agentPlanner,
+  PlannerRecoveryError,
+} from "./AgentPlanner";
 export { PlanExecutor, planExecutor } from "./PlanExecutor";
 export { parseSorobanIntent } from "./sorobanIntent";
 export { planHashService } from "./planHash";
@@ -46,6 +50,7 @@ export type {
   PlanStep,
   ExecutionPlan,
   PlanValidation,
+  PlannerRecoveryPolicy,
 } from "./AgentPlanner";
 
 export type {
